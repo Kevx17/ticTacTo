@@ -21,9 +21,28 @@ const GameBoard = (() => {
     return { board, winConditions, resetBoard };
 })();
 
+
+
+
 const Controll = (() => {
+
     const Players = [{ name: 'Player X', marker: 'X', score: 0 }, { name: 'Player O', marker: 'O', score: 0 }];
     let active = Players[0];
+    const gBoard = document.querySelector('#gameboard');
+    const cells = gBoard.querySelectorAll('*');
+    const score1 = document.querySelector('#score1');
+    const score2 = document.querySelector('#score2');
+
+
+    function refresh() {
+        document.querySelector('#title').innerHTML = active.name + '`s turn';
+        for (let index = 0; index < 9; index++) {
+            cells[index].innerHTML = GameBoard.board[index];           
+        }
+        score1.innerHTML = Players[0].name + ' score: ' + Players[0].score;
+        score2.innerHTML = Players[1].name + ' score: ' + Players[1].score;
+
+    }
 
     function switchActive() {
         active = active === Players[0] ? Players[1] : Players[0];
@@ -34,6 +53,8 @@ const Controll = (() => {
             GameBoard.board[index] = active.marker;
             checkEnd();
             switchActive();
+            refresh();
+            document.querySelector('#new').hidden = false;
         }
     }
 
@@ -70,21 +91,19 @@ const Controll = (() => {
     }
 
     function playAgain() {
-        GameBoard.resetBoard();      
+        GameBoard.resetBoard(); 
+        refresh();     
     }
 
     function newGame() {
+        GameBoard.resetBoard(); 
         active = Players[0];
         Players[0].score = 0;
         Players[1].score = 0;
+        document.querySelector('#new').hidden = false;
+        refresh();  
     }
 
     return { Players, switchActive, incrementScore, addMarker, checkEnd, playAgain, newGame };
 })();
 
-// Test
-Controll.addMarker(0);
-Controll.addMarker(5);
-Controll.addMarker(1);
-Controll.addMarker(8);
-Controll.addMarker(2);
